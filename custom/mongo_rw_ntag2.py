@@ -55,7 +55,7 @@ if __name__ == "__main__":
     db = get_database()
     url = get_url(db)
 
-    text = url['tiny_url']
+    text = root + url['tiny_url']
 
     # Handle text array
     text_arr = [char for char in text]
