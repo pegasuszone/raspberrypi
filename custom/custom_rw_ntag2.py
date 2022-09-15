@@ -54,7 +54,8 @@ for x in text_arr:
 block_number = 0
 
 for block in text_arr_sep:
-  data = bytes(r''.join([x for x in block]), 'ascii')
+  # data = bytes(r''.join([x for x in block]), 'ascii')
+  data = bytes([0x68, 0x74, 0x74, 0x70])
   try:
     pn532.ntag2xx_write_block(block_number, data)
     if pn532.ntag2xx_read_block(block_number) == data:
