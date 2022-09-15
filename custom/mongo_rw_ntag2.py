@@ -25,7 +25,7 @@ def get_url(db: Database) -> dict :
     urls =  short_urls.find({}, {"destination": 1, "tiny_url":1, "created":1}).sort('created', -1).limit(1)
     
     print(urls[0])
-    return urls[0]["destination"]
+    return urls[0]
 
 def write_nfc(block, data):
   try:
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     db = get_database()
     url = get_url(db)
 
-    text = url[0]['tiny_url']
+    text = url['tiny_url']
 
     # Handle text array
     text_arr = [char for char in text]
