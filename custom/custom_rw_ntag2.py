@@ -70,8 +70,11 @@ def write_nfc(block, data):
 # Current block to write
 block_number = 6
 
-write_nfc(4, bytes([0x03, 0x17, 0xD1, 0x01]))
-write_nfc(5, bytes([0x13, 0x55, 0x04, ord(trailing_char)]))
+long_len = len(text) + 5
+short_len = len(text) + 1
+
+write_nfc(4, bytes([0x03, long_len, 0xD1, 0x01]))
+write_nfc(5, bytes([short_len, 0x55, 0x04, ord(trailing_char)]))
 
 for block in text_arr_sep:
   data = bytes(block)
