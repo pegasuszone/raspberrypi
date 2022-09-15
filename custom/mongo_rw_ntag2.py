@@ -6,7 +6,7 @@ import RPi.GPIO as GPIO
 import pn532.pn532 as nfc
 from pn532 import *
 
-root = "test.pz-l.ink/"
+root = "https://test.pz-l.ink/"
 
 def get_database() -> Database :
     MONGODB_URI = "mongodb+srv://pegasus:5wJZNZ6KkBudyTGD@pegasuszonedb.pkzyr.mongodb.net/shorturlsDB"
