@@ -42,17 +42,17 @@ text_arr.append(chr(0xFE))
 trailing_char = text_arr[0]
 text_arr.pop(0)
 
-text_arr_sep = [['', '', '', '']]
+text_arr_sep = [[0, 0, 0, 0]]
 
 incrementer = 0
 i = 0
 
 for x in text_arr:
   if incrementer > 3:
-    text_arr_sep.append(['', '', '', ''])
+    text_arr_sep.append([0, 0, 0, 0])
     incrementer = 0
     i += 1
-  text_arr_sep[i][incrementer] = x
+  text_arr_sep[i][incrementer] = ord(x)
   incrementer += 1
 
 def write_nfc(block, data):
@@ -70,7 +70,7 @@ write_nfc(4, bytes([0x03, 0x16, 0xD1, 0x01]))
 write_nfc(5, bytes([0x13, 0x55, 0x04, ord(trailing_char)]))
 
 for block in text_arr_sep:
-  data = bytes(r''.join([x for x in block]), 'ascii')
+  data = bytes(block)
   # data = bytes([0x68, 0x74, 0x74, 0x70])
   try:
     pn532.ntag2xx_write_block(block_number, data)
