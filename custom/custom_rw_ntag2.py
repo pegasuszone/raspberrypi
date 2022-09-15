@@ -37,7 +37,11 @@ print('\n-----\n')
 
 # Handle text array
 text_arr = [char for char in text]
+
 text_arr.append(chr(0xFE))
+text_arr.append(chr(0x00))
+text_arr.append(chr(0x00))
+text_arr.append(chr(0x76))
 
 trailing_char = text_arr[0]
 text_arr.pop(0)
@@ -72,13 +76,11 @@ write_nfc(5, bytes([0x13, 0x55, 0x04, ord(trailing_char)]))
 for block in text_arr_sep:
   data = bytes(block)
   # data = bytes([0x68, 0x74, 0x74, 0x70])
-  try:
-    pn532.ntag2xx_write_block(block_number, data)
-    if pn532.ntag2xx_read_block(block_number) == data:
-        print('write block %d successfully' % block_number)
-  except nfc.PN532Error as e:
-    print(e.errmsg)
+  write_nfc(block_number, data)
   block_number += 1
 
+for _ in range(block_number, 30):
+  data = bytes([0x00, 0x00, 0x00, 0x00])
+  write_nfc(block_number, data)
 
 GPIO.cleanup()
