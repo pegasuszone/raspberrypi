@@ -28,8 +28,8 @@ while True:
         break
 print('Found card with UID:', [hex(i) for i in uid])
 
-# Write block #0
-block_number = 0
+# Write block #1
+block_number = 1
 data = bytes([0x68, 0x74, 0x74, 0x70])
 
 try:
