@@ -37,6 +37,11 @@ print('\n-----\n')
 
 # Handle text array
 text_arr = [char for char in text]
+text_arr.append(chr(0xFE))
+
+trailing_char = text_arr[0]
+text_arr.pop(0)
+
 text_arr_sep = [['', '', '', '']]
 
 incrementer = 0
@@ -47,15 +52,26 @@ for x in text_arr:
     text_arr_sep.append(['', '', '', ''])
     incrementer = 0
     i += 1
-  text_arr_sep[i][incrementer] = x;
+  text_arr_sep[i][incrementer] = x
   incrementer += 1
 
+def write_nfc(block, data):
+  try:
+    pn532.ntag2xx_write_block(block, data)
+    if pn532.ntag2xx_read_block(block) == data:
+        print('write block %d successfully' % block)
+  except nfc.PN532Error as e:
+    print(e.errmsg)
+
 # Current block to write
-block_number = 0
+block_number = 6
+
+write_nfc(4, bytes([0x03, 0x16, 0xD1, 0x01]))
+write_nfc(5, bytes([0x13, 0x55, 0x04, hex(ord(trailing_char))]))
 
 for block in text_arr_sep:
-  # data = bytes(r''.join([x for x in block]), 'ascii')
-  data = bytes([0x68, 0x74, 0x74, 0x70])
+  data = bytes(r''.join([x for x in block]), 'ascii')
+  # data = bytes([0x68, 0x74, 0x74, 0x70])
   try:
     pn532.ntag2xx_write_block(block_number, data)
     if pn532.ntag2xx_read_block(block_number) == data:
