@@ -28,9 +28,9 @@ while True:
         break
 print('Found card with UID:', [hex(i) for i in uid])
 
-# Write block #6
-block_number = 6
-data = bytes([0x00, 0x01, 0x02, 0x03])
+# Write block #0
+block_number = 0
+data = bytes([0x68, 0x74, 0x74, 0x70])
 
 try:
     pn532.ntag2xx_write_block(block_number, data)
