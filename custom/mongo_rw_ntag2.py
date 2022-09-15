@@ -6,7 +6,7 @@ import RPi.GPIO as GPIO
 import pn532.pn532 as nfc
 from pn532 import *
 
-root = "http://test.pz-l.ink/"
+root = "test.pz-l.ink/"
 
 def get_database() -> Database :
     MONGODB_URI = "mongodb+srv://pegasus:5wJZNZ6KkBudyTGD@pegasuszonedb.pkzyr.mongodb.net/shorturlsDB"
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     db = get_database()
     url = get_url(db)
 
-    text = url['tiny_url']
+    text = url[0]['tiny_url']
 
     # Handle text array
     text_arr = [char for char in text]
