@@ -82,5 +82,6 @@ for block in text_arr_sep:
 for _ in range(block_number, 30):
   data = bytes([0x00, 0x00, 0x00, 0x00])
   write_nfc(block_number, data)
+  block_number += 1
 
 GPIO.cleanup()
