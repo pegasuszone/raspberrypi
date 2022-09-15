@@ -71,7 +71,7 @@ def write_nfc(block, data):
 block_number = 6
 
 write_nfc(4, bytes([0x03, 0x16, 0xD1, 0x01]))
-write_nfc(5, bytes([0x13, 0x55, 0x04, ord(trailing_char)]))
+write_nfc(5, bytes([0x12, 0x55, 0x04, ord(trailing_char)]))
 
 for block in text_arr_sep:
   data = bytes(block)
