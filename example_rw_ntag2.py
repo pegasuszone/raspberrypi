@@ -10,7 +10,7 @@ from pn532 import *
 
 #pn532 = PN532_SPI(debug=False, reset=20, cs=4)
 #pn532 = PN532_I2C(debug=False, reset=20, req=16)
-pn532 = PN532_UART(debug=False, reset=50)
+pn532 = PN532_UART(debug=False, reset=20)
 
 ic, ver, rev, support = pn532.get_firmware_version()
 print('Found PN532 with firmware version: {0}.{1}'.format(ver, rev))
@@ -28,9 +28,9 @@ while True:
         break
 print('Found card with UID:', [hex(i) for i in uid])
 
-# Write block #1
-block_number = 1
-data = bytes([0x68, 0x74, 0x74, 0x70])
+# Write block #0
+block_number = 0
+data = bytes([0x01, 0x10, 0x03, 0x09])
 
 try:
     pn532.ntag2xx_write_block(block_number, data)
