@@ -25,9 +25,9 @@ def write_nfc(block, data):
   try:
     pn532.ntag2xx_write_block(block, data)
     if pn532.ntag2xx_read_block(block) == data:
-        print('write block %d successfully' % block)
+        print('write block %d successfully' % block, file=sys.stdout)
   except nfc.PN532Error as e:
-    print(e.errmsg)
+    print(e.errmsg, file=sys.stderr)
 
 
 if __name__ == "__main__":
@@ -38,7 +38,7 @@ if __name__ == "__main__":
       ic, ver, rev, support = pn532.get_firmware_version()
       pn532.SAM_configuration()
 
-      print('Waiting for NFC card to write to...')
+      print('Waiting for NFC card to write to...', file=sys.stdout)
       while True:
           # Check if a card is available to read
           uid = pn532.read_passive_target(timeout=0.5)
@@ -46,7 +46,7 @@ if __name__ == "__main__":
           # Try again if no card is available.
           if uid is not None:
               break
-      print('Found card with UID:', [hex(i) for i in uid])
+      print('Found card with UID:', [hex(i) for i in uid], file=sys.stdout)
 
       db = get_database()
       url = get_url(db)
@@ -100,4 +100,4 @@ if __name__ == "__main__":
 
       GPIO.cleanup()
     except:
-      print("Couldn't write, restarting...")
+      print("Couldn't write, restarting...", file=sys.stderr)
