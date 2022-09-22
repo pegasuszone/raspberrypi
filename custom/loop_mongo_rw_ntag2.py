@@ -6,6 +6,8 @@ import RPi.GPIO as GPIO
 import pn532.pn532 as nfc
 from pn532 import *
 
+import sys
+
 root = "test.pz-l.ink/"
 
 def get_database() -> Database:
