@@ -32,69 +32,72 @@ def write_nfc(block, data):
 
 if __name__ == "__main__":
   while True:
-    pn532 = PN532_UART(debug=False, reset=20)
+    try:
+      pn532 = PN532_UART(debug=False, reset=20)
 
-    ic, ver, rev, support = pn532.get_firmware_version()
-    pn532.SAM_configuration()
+      ic, ver, rev, support = pn532.get_firmware_version()
+      pn532.SAM_configuration()
 
-    print('Waiting for NFC card to write to...')
-    while True:
-        # Check if a card is available to read
-        uid = pn532.read_passive_target(timeout=0.5)
-        print('.', end="")
-        # Try again if no card is available.
-        if uid is not None:
-            break
-    print('Found card with UID:', [hex(i) for i in uid])
+      print('Waiting for NFC card to write to...')
+      while True:
+          # Check if a card is available to read
+          uid = pn532.read_passive_target(timeout=0.5)
+          print('.', end="")
+          # Try again if no card is available.
+          if uid is not None:
+              break
+      print('Found card with UID:', [hex(i) for i in uid])
 
-    db = get_database()
-    url = get_url(db)
+      db = get_database()
+      url = get_url(db)
 
-    text = root + url['tiny_url']
+      text = root + url['tiny_url']
 
-    # Handle text array
-    text_arr = [char for char in text]
+      # Handle text array
+      text_arr = [char for char in text]
 
-    text_arr.append(chr(0xFE))
-    text_arr.append(chr(0x00))
-    text_arr.append(chr(0x00))
-    text_arr.append(chr(0x76))
+      text_arr.append(chr(0xFE))
+      text_arr.append(chr(0x00))
+      text_arr.append(chr(0x00))
+      text_arr.append(chr(0x76))
 
-    trailing_char = text_arr[0]
-    text_arr.pop(0)
+      trailing_char = text_arr[0]
+      text_arr.pop(0)
 
-    text_arr_sep = [[0, 0, 0, 0]]
+      text_arr_sep = [[0, 0, 0, 0]]
 
-    incrementer = 0
-    i = 0
+      incrementer = 0
+      i = 0
 
-    for x in text_arr:
-      if incrementer > 3:
-        text_arr_sep.append([0, 0, 0, 0])
-        incrementer = 0
-        i += 1
-      text_arr_sep[i][incrementer] = ord(x)
-      incrementer += 1
+      for x in text_arr:
+        if incrementer > 3:
+          text_arr_sep.append([0, 0, 0, 0])
+          incrementer = 0
+          i += 1
+        text_arr_sep[i][incrementer] = ord(x)
+        incrementer += 1
 
 
-    # Current block to write
-    block_number = 6
+      # Current block to write
+      block_number = 6
 
-    long_len = len(text) + 5
-    short_len = len(text) + 1
+      long_len = len(text) + 5
+      short_len = len(text) + 1
 
-    write_nfc(4, bytes([0x03, long_len, 0xD1, 0x01]))
-    write_nfc(5, bytes([short_len, 0x55, 0x04, ord(trailing_char)]))
+      write_nfc(4, bytes([0x03, long_len, 0xD1, 0x01]))
+      write_nfc(5, bytes([short_len, 0x55, 0x04, ord(trailing_char)]))
 
-    for block in text_arr_sep:
-      data = bytes(block)
-      # data = bytes([0x68, 0x74, 0x74, 0x70])
-      write_nfc(block_number, data)
-      block_number += 1
+      for block in text_arr_sep:
+        data = bytes(block)
+        # data = bytes([0x68, 0x74, 0x74, 0x70])
+        write_nfc(block_number, data)
+        block_number += 1
 
-    for _ in range(block_number, 30):
-      data = bytes([0x00, 0x00, 0x00, 0x00])
-      write_nfc(block_number, data)
-      block_number += 1
+      for _ in range(block_number, 30):
+        data = bytes([0x00, 0x00, 0x00, 0x00])
+        write_nfc(block_number, data)
+        block_number += 1
 
-    GPIO.cleanup()
+      GPIO.cleanup()
+    except:
+      print("Couldn't write, restarting...")
