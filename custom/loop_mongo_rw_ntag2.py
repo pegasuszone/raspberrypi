@@ -31,6 +31,7 @@ def write_nfc(block, data):
 
 
 if __name__ == "__main__":
+  while True:
     pn532 = PN532_UART(debug=False, reset=20)
 
     ic, ver, rev, support = pn532.get_firmware_version()
